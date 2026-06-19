@@ -1,14 +1,13 @@
 from django import forms
 from django.contrib.auth import authenticate
-from django.contrib.auth.forms import PasswordChangeForm as DjangoPasswordChangeForm
 
-from .models import User
+from .models import USER_NAME_MAX_LENGTH, User
 from .validators import normalize_phone, validate_github_url, validate_phone
 
 
 class RegistrationForm(forms.Form):
-    name = forms.CharField(max_length=124, label="Имя")
-    surname = forms.CharField(max_length=124, label="Фамилия")
+    name = forms.CharField(max_length=USER_NAME_MAX_LENGTH, label="Имя")
+    surname = forms.CharField(max_length=USER_NAME_MAX_LENGTH, label="Фамилия")
     email = forms.EmailField(label="Email")
     password = forms.CharField(widget=forms.PasswordInput, label="Пароль")
 
@@ -41,9 +40,7 @@ class LoginForm(forms.Form):
         email = cleaned_data.get("email")
         password = cleaned_data.get("password")
         if email and password:
-            self.user = authenticate(
-                self.request, username=email, password=password
-            )
+            self.user = authenticate(self.request, username=email, password=password)
             if self.user is None:
                 raise forms.ValidationError(
                     "Неверный имейл или пароль",
@@ -73,7 +70,3 @@ class ProfileEditForm(forms.ModelForm):
         url = self.cleaned_data.get("github_url", "")
         validate_github_url(url)
         return url
-
-
-class PasswordChangeForm(DjangoPasswordChangeForm):
-    pass
