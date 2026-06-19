@@ -1,0 +1,207 @@
+[
+{
+  "model": "users.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$S9wm4DkF1FsxIbNVhzYHzK$pEfM+SVzxqDM7L0xH5FCm4aARKKD4EME3A66aPosZ2U=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-19T02:02:09.547Z",
+    "email": "anna@example.com",
+    "name": "Анна",
+    "surname": "Иванова",
+    "avatar": "avatars/avatar_А.png",
+    "phone": "+79001111111",
+    "github_url": "https://github.com/anna-dev",
+    "about": "Backend-разработчик",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$iGRuxcczxjgxA5h4rwqXHT$mdKtCRxfkMUz/z7L9qg2dBFMDKivuPwssrVq3aB/Fh0=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-19T02:02:10.366Z",
+    "email": "boris@example.com",
+    "name": "Борис",
+    "surname": "Петров",
+    "avatar": "avatars/avatar_Б.png",
+    "phone": "+79002222222",
+    "github_url": "https://github.com/boris-dev",
+    "about": "Frontend-разработчик",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$zINnl8NawwBGw3iA5LmKcQ$YZMZ6bkvHgSu+tRCwCGd1+CvUQ3/VCPB23yZlQ8DkXw=",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "",
+    "last_name": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-19T02:02:10.721Z",
+    "email": "vika@example.com",
+    "name": "Вика",
+    "surname": "Сидорова",
+    "avatar": "avatars/avatar_В.png",
+    "phone": "+79003333333",
+    "github_url": "https://github.com/vika-dev",
+    "about": "Fullstack-разработчик",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "users.user",
+  "pk": 4,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$SWpHybPx4a4RqIUjYhY0F0$xV9pSSnmfNNq/Ve4Rrw6E24ILuNXv23KItV5LxvL+Gg=",
+    "last_login": null,
+    "is_superuser": true,
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-06-19T02:02:11.103Z",
+    "email": "admin@example.com",
+    "name": "Admin",
+    "surname": "User",
+    "avatar": "avatars/avatar_A.png",
+    "phone": "+79009999999",
+    "github_url": "",
+    "about": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "projects.skill",
+  "pk": 1,
+  "fields": {
+    "name": "Python"
+  }
+},
+{
+  "model": "projects.skill",
+  "pk": 2,
+  "fields": {
+    "name": "Django"
+  }
+},
+{
+  "model": "projects.skill",
+  "pk": 3,
+  "fields": {
+    "name": "JavaScript"
+  }
+},
+{
+  "model": "projects.skill",
+  "pk": 4,
+  "fields": {
+    "name": "React"
+  }
+},
+{
+  "model": "projects.skill",
+  "pk": 5,
+  "fields": {
+    "name": "PostgreSQL"
+  }
+},
+{
+  "model": "projects.project",
+  "pk": 1,
+  "fields": {
+    "name": "TeamFinder API",
+    "description": "REST API для платформы поиска команды",
+    "owner": 1,
+    "created_at": "2026-06-19T02:02:11.089Z",
+    "github_url": "https://github.com/anna-dev/teamfinder-api",
+    "status": "open",
+    "participants": [
+      1,
+      2
+    ],
+    "skills": [
+      1,
+      2,
+      5
+    ]
+  }
+},
+{
+  "model": "projects.project",
+  "pk": 2,
+  "fields": {
+    "name": "React Dashboard",
+    "description": "Панель управления проектами",
+    "owner": 2,
+    "created_at": "2026-06-19T02:02:11.096Z",
+    "github_url": "https://github.com/boris-dev/dashboard",
+    "status": "open",
+    "participants": [
+      2
+    ],
+    "skills": [
+      3,
+      4
+    ]
+  }
+},
+{
+  "model": "projects.project",
+  "pk": 3,
+  "fields": {
+    "name": "Mobile App",
+    "description": "Мобильное приложение для участников",
+    "owner": 3,
+    "created_at": "2026-06-19T02:02:11.096Z",
+    "github_url": "",
+    "status": "closed",
+    "participants": [
+      3
+    ],
+    "skills": [
+      3,
+      4
+    ]
+  }
+},
+{
+  "model": "projects.project",
+  "pk": 4,
+  "fields": {
+    "name": "DevOps Pipeline",
+    "description": "CI/CD для проектов платформы",
+    "owner": 1,
+    "created_at": "2026-06-19T02:02:11.103Z",
+    "github_url": "",
+    "status": "open",
+    "participants": [
+      1
+    ],
+    "skills": [
+      1,
+      5
+    ]
+  }
+}
+]
