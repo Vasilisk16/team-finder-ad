@@ -1,107 +1,171 @@
-# Первоначальная настройка проекта TeamFinder
+# TeamFinder — вариант 3
 
-## 1. Виртуальное окружение
+Веб-приложение для поиска команды и проектов. Реализован **вариант 3**: навыки проектов и фильтрация по навыкам на главной странице.
 
-Перед началом работы необходимо создать и активировать виртуальное окружение Python.  
-
-
-1. **Создайте виртуальное окружение (в папке проекта):**
-   ```bash
-   python3 -m venv venv
-   ```
-
-   После этого появится папка `venv`, где будут храниться зависимости проекта.
-
-2. **Активируйте окружение:**
-
-    - **Windows (PowerShell):**
-      ```bash
-      venv\Scripts\Activate.ps1
-      ```
-    - **Windows (cmd):**
-      ```bash
-      venv\Scripts\activate
-      ```
-    - **Linux/Mac:**
-      ```bash
-      source venv/bin/activate
-      ```
-
-3. **Установите зависимости из `requirements.txt`:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-   После установки в окружении будут доступны все нужные библиотеки Django-проекта.
-
-## 2. Создание `.env`
-
-Файл `.env` содержит конфиденциальные настройки проекта — ключ Django, параметры БД и другие переменные.  
-
-Особое внимание обратите на строчку `TASK_VERSION=`. 
-Добавьте число, которое соответствует вашему варианту задания. 
-Этот параметр определяет, какие шаблоны использовать для сайта (из папок `templates_var1`/`templates_var2`/`templates_var3`).
-Лишние две папки не из вашего варианта можно удалить.
-
-В репозитории есть пример `.env_example`, который нужно скопировать и заполнить:
-
-```bash
-cp .env_example .env
-```
-
-После этого откройте `.env` и укажите свои значения.  
-
-| Переменная            | Назначение                                                                                                                                                 |
-|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **DJANGO_SECRET_KEY** | Секретный ключ Django, используемый для подписи cookie и токенов. Можно сгенерировать при помощи `get_random_secret_key` из `django.core.management.utils` |
-| **DJANGO_DEBUG**      | Режим отладки. Установите `True` во время разработки.                                                                                                      |
-| **POSTGRES_DB**       | Имя базы данных PostgreSQL, которую будет использовать Django.                                                                                             |
-| **POSTGRES_USER**     | Имя пользователя PostgreSQL.                                                                                                                               |
-| **POSTGRES_PASSWORD** | Пароль пользователя PostgreSQL.                                                                                                                            |
-| **POSTGRES_HOST**     | Адрес сервера БД. В случае локальной разработки localhost.                                                                                                 |
-| **POSTGRES_PORT**     | Порт подключения к БД (по умолчанию `5432`).                                                                                                               |
-| **TASK_VERSION**      | Номер варианта вашего задания. Используется для определения набора HTML-шаблонов.                                                                          |
+Стек: **Django 5.2**, **PostgreSQL**, **Docker Compose** (БД), HTML/CSS/JS из стартового набора Практикума.
 
 ---
 
-## 3. Запуск PostgreSQL
+## Инструкция для ревьюера
 
-Для работы приложения **TeamFinder** используется база данных **PostgreSQL**.
-По условию задания база данных должна запускаться в контейнере Docker.
+### Требования
 
-В проекте уже есть пример файла `docker-compose.yml`. 
-Используйте готовый или измените под свои нужды, а дальше запускайте:
+- Python 3.10+
+- Docker и Docker Compose (для PostgreSQL)
+- Git не обязателен
 
-```bash
+### Запуск на Windows (PowerShell)
+
+```powershell
+cd team-finder-practicum-v3
+copy .env_example .env
 docker compose up -d
+python -m venv venv
+venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py loaddata fixtures/initial.json
+python manage.py runserver
 ```
 
-`-d` значит `detach`, то есть контейнер продолжит работать в фоне. Чтобы его остановить, надо будет ввести
+Открыть: **http://127.0.0.1:8000** — редирект на `/project/list/`.
+
+### Запуск на Linux / macOS
+
+```bash
+cd team-finder-practicum-v3
+cp .env_example .env
+docker compose up -d
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py loaddata fixtures/initial.json
+python manage.py runserver
+```
+
+### Остановка PostgreSQL
 
 ```bash
 docker compose down
 ```
 
-Если возникает ошибка "permission denied while trying to connect to the Docker daemon socket", то может потребоваться добавить `sudo` перед командой.
+Данные БД сохраняются в Docker volume `postgres_data`.
 
 ---
 
-После этого база данных будет доступна по адресу `localhost:5432`.  
-Нужно будет использовать эти же параметры в файле `.env`.
+## Тестовые аккаунты
 
-> Если на компьютере уже развёрнут сервер БД на порте 5432, и вы не хотите создавать БД для этого проекта на этом сервере, целесообразнее будет изменить порт на нестандартный.
-> Нестандартный порт нужно будет поставить слева в паре портов в docker-compose (`"5433":"5432"`) и в .env.
+| Email | Пароль | Описание |
+|-------|--------|----------|
+| anna@example.com | testpass123 | 2 проекта, навыки Python/Django |
+| boris@example.com | testpass123 | 1 проект, участник проекта Анны |
+| vika@example.com | testpass123 | 1 закрытый проект |
+| admin@example.com | adminpass123 | администратор, `/admin/` |
 
-## 4. Запуск Django
+У каждого пользователя минимум один проект. Файл фикстур: `fixtures/initial.json`.
 
-После заполнения `.env` и настройки базы данных можно запустить сервер разработки:
+---
 
-```bash
-python manage.py runserver
+## Что проверить (вариант 3)
+
+| Страница | URL | Действие |
+|----------|-----|----------|
+| Главная | `/project/list/` | карточки проектов, фильтр по навыкам (`?skill=Python`) |
+| Регистрация | `/users/register/` | после submit → `/users/login/` |
+| Вход | `/users/login/` | после входа → `/projects/list` |
+| Профиль | `/users/1/` | ФИО, контакты, проекты пользователя |
+| Редактирование | `/users/edit-profile/` | только для своего аккаунта |
+| Смена пароля | `/users/change-password/` | только авторизованным |
+| Список пользователей | `/users/list/` | карточки, пагинация 12 |
+| Проект | `/projects/1/` | навыки (AJAX), участие, завершение |
+| Создание проекта | `/projects/create-project/` | только авторизованным |
+| Админка | `/admin/` | admin@example.com |
+
+**Навыки (AJAX):** войти как anna@example.com → свой проект → «+ Добавить навык» → autocomplete / создать новый → удалить через ×.
+
+**Выход:** меню пользователя → «Выйти» → главная без 404.
+
+---
+
+## Структура проекта
+
+```
+team-finder-practicum-v3/
+├── team_finder/          # настройки Django
+├── users/                # User, auth, профиль
+├── projects/             # Project, Skill, CRUD, фильтры
+├── templates_var3/       # HTML-шаблоны (вариант 3)
+├── static/               # CSS, JS, изображения
+├── fixtures/             # тестовые данные
+├── media/                # аватары пользователей
+├── docs/                 # материалы Практикума
+├── docker-compose.yml    # PostgreSQL
+├── requirements.txt
+├── .env_example
+└── manage.py
 ```
 
-Теперь проект доступен по адресу [http://localhost:8000](http://localhost:8000). 
-Если видите ракету с надписью "The install worked successfully! Congratulations!", то запуск прошёл успешно, Django работает!
-Осталось всего ничего: реализовать весь проект!
+---
 
-Если в процессе разработки способ развертывания приложения поменяется, обновите `readme.md` с пометкой ревьюеру, как запускать и проверять приложение.
+## Переменные окружения (.env)
+
+| Переменная | Значение |
+|------------|----------|
+| DJANGO_SECRET_KEY | секретный ключ Django |
+| DJANGO_DEBUG | True |
+| POSTGRES_DB | team_finder |
+| POSTGRES_USER | team_finder |
+| POSTGRES_PASSWORD | team_finder |
+| POSTGRES_HOST | localhost |
+| POSTGRES_PORT | 5432 |
+| TASK_VERSION | **3** (обязательно) |
+
+---
+
+## Реализованный функционал
+
+- Регистрация, вход, выход, профиль, редактирование, смена пароля
+- Список и создание/редактирование проектов
+- Участие в проектах, завершение проекта автором
+- **Вариант 3:** навыки проекта (add/remove/autocomplete), фильтр на главной
+- Пагинация: 12 проектов и 12 пользователей на страницу
+- PostgreSQL + Docker Compose + volume для данных
+- Django Admin
+
+---
+
+## Отклонения от текста урока
+
+| Тема | Решение |
+|------|---------|
+| После регистрации | redirect на `/users/login/` (чек-лист ревью) |
+| `skills.js` | адаптирован под JSON `{skill_id, created, added}` |
+| Шаблоны | исправлен merge conflict, pagination, кнопка «Создать проект» |
+
+---
+
+## Возможные проблемы
+
+**Docker не запускается:** убедитесь, что Docker Desktop запущен. Порт 5432 не занят другим PostgreSQL.
+
+**Ошибка подключения к БД:** проверьте `.env` — параметры должны совпадать с `docker-compose.yml`.
+
+**Аватары не отображаются после loaddata:** в архиве включена папка `media/avatars/`. Если файлов нет — зарегистрируйте нового пользователя (avatar генерируется автоматически).
+
+**Порт 8000 занят:** `python manage.py runserver 8001`
+
+---
+
+## Первоначальная настройка (из стартового набора)
+
+Подробности по переменным и Docker — в разделе «Инструкция для ревьюера» выше.
+
+Пример `.env`:
+
+```bash
+copy .env_example .env   # Windows
+cp .env_example .env     # Linux/macOS
+```
+
+Обязательно указать `TASK_VERSION=3` — используются шаблоны из `templates_var3/`.
