@@ -3,13 +3,15 @@ import re
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 
+PHONE_LENGTH_WITH_PREFIX_8 = 11
+PHONE_DIGITS_COUNT = 10
 
-PHONE_PATTERN = re.compile(r"^(8|\+7)\d{10}$")
+PHONE_PATTERN = re.compile(rf"^(8|\+7)\d{{{PHONE_DIGITS_COUNT}}}$")
 
 
 def normalize_phone(phone):
     phone = phone.strip()
-    if phone.startswith("8") and len(phone) == 11:
+    if phone.startswith("8") and len(phone) == PHONE_LENGTH_WITH_PREFIX_8:
         return "+7" + phone[1:]
     return phone
 
