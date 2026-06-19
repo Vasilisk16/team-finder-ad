@@ -142,6 +142,7 @@ team-finder-practicum-v3/
 | После регистрации | redirect на `/users/login/` (чек-лист ревью) |
 | `skills.js` | адаптирован под JSON `{skill_id, created, added}` |
 | Шаблоны | исправлен merge conflict, pagination, кнопка «Создать проект» |
+| `select_related` в `user_list_view` | не используется: в варианте 3 шаблон списка пользователей читает только поля модели `User` (`name`, `surname`, `about`, `avatar`), без обращений к ForeignKey |
 
 ---
 
