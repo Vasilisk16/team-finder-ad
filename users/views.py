@@ -1,14 +1,11 @@
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
+from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .forms import (
-    LoginForm,
-    PasswordChangeForm,
-    ProfileEditForm,
-    RegistrationForm,
-)
+from team_finder.pagination import get_page
+
+from .forms import LoginForm, ProfileEditForm, RegistrationForm
 from .models import User
 
 
@@ -28,7 +25,7 @@ def login_view(request):
         form = LoginForm(request.POST, request=request)
         if form.is_valid():
             login(request, form.user)
-            return redirect("/projects/list")
+            return redirect("project_list")
     else:
         form = LoginForm()
     return render(request, "users/login.html", {"form": form})
@@ -36,14 +33,12 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect("/projects/list")
+    return redirect("project_list")
 
 
 def user_list_view(request):
     users = User.objects.order_by("-date_joined")
-    paginator = Paginator(users, 12)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
+    page_obj = get_page(request, users)
     return render(
         request,
         "users/participants.html",
@@ -62,7 +57,7 @@ def edit_profile_view(request):
         form = ProfileEditForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect(f"/users/{request.user.id}/")
+            return redirect("users:detail", user_id=request.user.id)
     else:
         form = ProfileEditForm(instance=request.user)
     return render(request, "users/edit_profile.html", {"form": form})
@@ -74,7 +69,7 @@ def change_password_view(request):
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             form.save()
-            return redirect(f"/users/{request.user.id}/")
+            return redirect("users:detail", user_id=request.user.id)
     else:
         form = PasswordChangeForm(request.user)
     return render(request, "users/change_password.html", {"form": form})
